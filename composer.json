@@ -1,0 +1,14 @@
+{
+  "name": "sb/jsonrpc-bundle",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "description": "",
+  "autoload": {
+    "psr-4": { "": "src/" }
+  },
+  "require": {
+    "php": ">=7.0.0",
+    "symfony/symfony": ">=3.4",
+    "symfony/stopwatch": ">=3.3"
+  }
+}

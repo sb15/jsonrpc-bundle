@@ -1,0 +1,4 @@
+sb_jsonrpc:
+    path:
+    defaults: { _controller: sb_jsonrpc.jsonrpccontroller:execute, optionalTrailingSlash : "/" }
+    requirements: { optionalTrailingSlash : "[/]{0,1}" }
