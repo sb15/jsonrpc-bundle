@@ -49,7 +49,7 @@ class JsonRpcController implements ContainerAwareInterface
      * @return array
      * @throws JsonRpcException
      */
-    public function getServiceName($methodName)
+    public function getServiceAndMethodName($methodName)
     {
         $delimiter = '.';
 
@@ -142,7 +142,7 @@ class JsonRpcController implements ContainerAwareInterface
             $response->setRequest($jsonRpcRequest);
             $jsonRpcRequest->parseRequest();
 
-            list($serviceName, $methodName) = $this->getServiceName($jsonRpcRequest->getMethod());
+            list($serviceName, $methodName) = $this->getServiceAndMethodName($jsonRpcRequest->getMethod());
 
             if (!$this->container->has($serviceName)) {
                 throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND);
