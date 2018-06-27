@@ -1,8 +1,8 @@
 parameters:
-    sb_jsonrpc.jsonrpccontroller.class: Sb\JsonRpcBundle\Controller\JsonRpcController
+    sb_json_rpc.jsonrpccontroller.class: Sb\JsonRpcBundle\Controller\JsonRpcController
 
 services:
-    sb_jsonrpc.jsonrpccontroller:
+    sb_json_rpc.jsonrpccontroller:
         public: true
-        class: '%sb_jsonrpc.jsonrpccontroller.class%'
-        arguments: ['@service_container', '%sb.jsonrpc%']
+        class: '%sb_json_rpc.jsonrpccontroller.class%'
+        arguments: ['@service_container', '%sb.json_rpc%']

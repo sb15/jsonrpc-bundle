@@ -6,7 +6,6 @@ use Sb\JsonRpcBundle\Exception\JsonRpcException;
 use Sb\JsonRpcBundle\JsonRpcRequest;
 use Sb\JsonRpcBundle\JsonRpcResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -14,12 +13,6 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class JsonRpcController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
-    
-    const PARSE_ERROR = -32700;
-    const INVALID_REQUEST = -32600;
-    const METHOD_NOT_FOUND = -32601;
-    const INVALID_PARAMS = -32602;
-    const INTERNAL_ERROR = -32603;
 
     /**
      * Functions that are allowed to be called
@@ -36,19 +29,14 @@ class JsonRpcController implements ContainerAwareInterface
     private $services = [];
 
     /**
-     * @var \JMS\Serializer\SerializationContext
-     */
-    private $serializationContext;
-
-    /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     * @param array $config Associative array for configuration, expects at least a key "functions"
-     * @throws \InvalidArgumentException
+     * JsonRpcController constructor.
+     * @param $container
+     * @param $config
      */
     public function __construct($container, $config)
     {
         if (isset($config['functions'])) {
-            if (!is_array($config['functions'])) {
+            if (!\is_array($config['functions'])) {
                 throw new \InvalidArgumentException('Configuration parameter "functions" must be array');
             }
             $this->functions = $config['functions'];
@@ -70,16 +58,22 @@ class JsonRpcController implements ContainerAwareInterface
             $method = $this->functions[$methodName]['method'];
         } else {
 
-            if (!count($this->services)) {
+            if (!\count($this->services)) {
                 throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND);
             }
 
-            if (strpos($methodName, $delimiter) > 0) {
-                list($serviceName, $method) = explode($delimiter, $methodName);
-                if (!in_array($serviceName, $this->services, true)) {
-                    throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND);
-                }
+            if (strpos($methodName, $delimiter) === false) {
+                throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND);
             }
+
+            list($serviceClass, $method) = explode($delimiter, $methodName);
+
+            if (!array_key_exists($serviceClass, $this->services)) {
+                throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND);
+            }
+
+            $serviceName = $this->services[$serviceClass];
+
         }
 
         return [$serviceName, $method];
@@ -97,7 +91,7 @@ class JsonRpcController implements ContainerAwareInterface
     {
         $service = $this->container->get($serviceName);
 
-        if (is_callable(array($service, $methodName))) {
+        if (!\is_callable(array($service, $methodName))) {
             throw new JsonRpcException(JsonRpcException::METHOD_NOT_FOUND);
         }
 
@@ -132,7 +126,7 @@ class JsonRpcController implements ContainerAwareInterface
             throw new JsonRpcException(JsonRpcException::INTERNAL_ERROR, 'Too many parameters');
         }
 
-        return call_user_func_array([ $service, $methodName ], $callingParams);
+        return \call_user_func_array([ $service, $methodName ], $callingParams);
     }
 
     public function execute(Request $request)
@@ -183,11 +177,15 @@ class JsonRpcController implements ContainerAwareInterface
     }
 
     /**
-     * @param $service
+     * @param $serviceName
+     * @throws \ReflectionException
      */
-    public function addService($service)
+    public function addService($serviceName)
     {
-        $this->services[] = $service;
+        $service = $this->container->get($serviceName);
+        $serviceReflectionClass = new \ReflectionClass(get_class($service));
+        $serviceClass = lcfirst($serviceReflectionClass->getShortName());
+        $this->services[$serviceClass] = $serviceName;
     }
 
     /**

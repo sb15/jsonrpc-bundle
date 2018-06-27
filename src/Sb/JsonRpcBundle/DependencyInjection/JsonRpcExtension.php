@@ -14,9 +14,14 @@ class JsonRpcExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('sb.jsonrpc', $config);
+        $container->setParameter('sb.json_rpc', $config);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+    }
+
+    public function getAlias()
+    {
+        return 'sb_json_rpc';
     }
 }

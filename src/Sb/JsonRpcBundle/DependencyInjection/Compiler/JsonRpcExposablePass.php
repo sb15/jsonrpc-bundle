@@ -8,8 +8,8 @@ class JsonRpcExposablePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('sb_jsonrpc.jsonrpccontroller');
-        $services = $container->findTaggedServiceIds('sb_jsonrpc.exposable');
+        $definition = $container->getDefinition('sb_json_rpc.jsonrpccontroller');
+        $services = $container->findTaggedServiceIds('sb_json_rpc.exposable');
         foreach ($services as $service => $attributes) {
             $definition->addMethodCall('addService', array($service));
         }
