@@ -8,7 +8,6 @@
   },
   "require": {
     "php": ">=7.0.0",
-    "symfony/symfony": ">=3.4",
     "symfony/stopwatch": ">=3.3"
   }
 }
