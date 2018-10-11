@@ -1,4 +1,4 @@
 sb_json_rpc:
     path: "/"
-    defaults: { _controller: sb_json_rpc.jsonrpccontroller:execute, optionalTrailingSlash : "/" }
+    defaults: { _controller: sb_json_rpc.jsonrpccontroller::execute, optionalTrailingSlash : "/" }
     requirements: { optionalTrailingSlash : "[/]{0,1}" }
