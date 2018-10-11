@@ -150,7 +150,7 @@ class JsonRpcController implements ContainerAwareInterface
 
             $response->setResult($this->processMethod($serviceName, $methodName, $jsonRpcRequest));
 
-        } catch (\Exception $e) {
+        } catch (JsonRpcException $e) {
             $response->setError($e);
             $stopWatch->stop('api');
         }
