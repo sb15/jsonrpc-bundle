@@ -3,6 +3,8 @@ parameters:
 
 services:
     sb_json_rpc.jsonrpccontroller:
-        public: true
+        autowire: true
+        autoconfigure: true
         class: '%sb_json_rpc.jsonrpccontroller.class%'
-        arguments: ['@service_container', '%sb.json_rpc%']
+        arguments: ['%sb.json_rpc%']
+        tags: [ 'controller.service_arguments' ]

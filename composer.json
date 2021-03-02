@@ -8,6 +8,7 @@
   },
   "require": {
     "php": ">=7.0.0",
-    "symfony/stopwatch": ">=3.3"
+    "symfony/stopwatch": ">=3.3",
+    "symfony/string": "^5.2"
   }
 }
