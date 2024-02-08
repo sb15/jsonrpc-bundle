@@ -5,6 +5,7 @@ namespace Sb\JsonRpcBundle;
 use Sb\JsonRpcBundle\DependencyInjection\Compiler\JsonRpcExposablePass;
 use Sb\JsonRpcBundle\DependencyInjection\JsonRpcExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class JsonRpcBundle extends Bundle
@@ -15,7 +16,7 @@ class JsonRpcBundle extends Bundle
         $container->addCompilerPass(new JsonRpcExposablePass());
     }
 
-    public function getContainerExtension()
+    public function getContainerExtension(): ?ExtensionInterface
     {
         return new JsonRpcExtension();
     }
