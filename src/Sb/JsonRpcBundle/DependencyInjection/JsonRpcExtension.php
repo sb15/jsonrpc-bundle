@@ -15,7 +15,7 @@ class JsonRpcExtension extends Extension
         $loader->load('services.yml');
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'sb_json_rpc';
     }
